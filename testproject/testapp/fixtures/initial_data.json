@@ -1,0 +1,34 @@
+[
+    {
+        "pk": 1,
+        "model": "auth.user",
+        "fields": {
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "last_login": "2013-01-23T18:02:41.707Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$10000$wkigUbHB2Ezr$EUJb0CChlny7iJBEeXzDI/AiD2Q/Hapyyg06J1MZF54=",
+            "email": "admin@gmail.com",
+            "date_joined": "2013-01-23T18:02:41.707Z"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "testapp.personalinfo",
+        "fields": {
+            "bio": "My biography. Nothing interesting here.My biography. Nothing interesting here.",
+            "last_name": "Gordiychuk",
+            "name": "Andrew",
+            "other_contacts": "gorazio@ukr.net",
+            "skype": "gorazio1986",
+            "birth_date": "1986-12-20",
+            "jabber": "annima@khavr.com",
+            "email": "annima.sola@gmail.com"
+        }
+    }
+]
