@@ -5,7 +5,7 @@ from django.test.client import Client
 from annoying.functions import get_object_or_None
 from datetime import date
 
-from models import PersonalInfo
+from models import PersonalInfo, RequestsLog
 
 
 class MainPageTest(TestCase):
@@ -53,3 +53,54 @@ class MainPageTest(TestCase):
                     str(self.response.context['my_info']))
         self.assertTrue(self.my_info.last_name in\
          str(self.response.context['my_info']))
+
+
+class RequestsLogTemplateTest(TestCase):
+    
+    def setUp(self):
+        self.client = Client()
+
+    def test_template(self):
+        response = self.client.get(reverse('requests_url'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'requests_log.html')
+
+    def test_requests_page(self):
+        response = self.client.get(reverse('requests_url'))
+        self.assertContains(response, 'from', count=1, status_code=200)
+        for n in xrange(15):
+            response = self.client.get(reverse('requests_url'))
+        self.assertContains(response, 'from', count=10, status_code=200)
+
+    def test_template_context(self):
+        response = self.client.get(reverse('requests_url'))
+        self.assertTrue('requests' in response.context)
+        requestslog_object = RequestsLog.objects.get(pk=1)
+        self.assertContains(response, requestslog_object.requested_url,
+                    status_code=200)
+        self.assertContains(response, requestslog_object.request_type,
+                    status_code=200)
+        self.assertContains(response, requestslog_object.request_ip,
+                    status_code=200)
+
+
+class RequestsLogModelTest(TestCase):
+    
+    def setUp(self):
+        self.new_request = any_model(RequestsLog)
+
+    def test_save_object(self):
+        self.new_request.save()
+        requestslog_object = RequestsLog.objects.get(request_timestamp=\
+                    self.new_request.request_timestamp)
+        self.assertEqual(requestslog_object.requested_url,\
+                    self.new_request.requested_url)
+        self.assertEqual(requestslog_object.request_type,\
+                    self.new_request.request_type)
+
+    def test_delete_object(self):
+        self.new_request.save()
+        requestslog_object = get_object_or_None(RequestsLog,
+                    request_timestamp=self.new_request.request_timestamp)
+        
+            
