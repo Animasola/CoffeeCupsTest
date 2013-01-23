@@ -14,3 +14,13 @@ class PersonalInfo(models.Model):
 
     def __unicode__(self):
         return '%s %s' % (self.name, self.last_name)
+
+
+class RequestsLog(models.Model):
+    requested_url = models.CharField(max_length=255)
+    request_ip = models.CharField(max_length=20)
+    request_type = models.CharField(max_length=10)
+    request_timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    def __unicode__(self):
+        return self.requested_url

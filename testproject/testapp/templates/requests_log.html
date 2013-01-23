@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block head %}<title>Request's Log</title>{% endblock %}
+{% block body %}
+<h3>First 10 request to this site</h3>
+
+<ul class="left_side_ul">
+{% for request in requests %}
+  <li class="log_instance"><b>{{ request.request_type }}</b> request to <a href="{{ request.requested_url }}">{{ request.requested_url }}</a> from <b>{{ request.request_ip }}</b> at {{ request.request_timestamp }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
