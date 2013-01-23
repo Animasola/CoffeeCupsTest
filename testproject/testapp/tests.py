@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.template import Context
 from django.test.client import Client
 from annoying.functions import get_object_or_None
+from django_any import any_model
 from datetime import date
 
 from models import PersonalInfo, RequestsLog
@@ -56,7 +57,7 @@ class MainPageTest(TestCase):
 
 
 class RequestsLogTemplateTest(TestCase):
-    
+
     def setUp(self):
         self.client = Client()
 
@@ -85,13 +86,13 @@ class RequestsLogTemplateTest(TestCase):
 
 
 class RequestsLogModelTest(TestCase):
-    
+
     def setUp(self):
         self.new_request = any_model(RequestsLog)
 
     def test_save_object(self):
         self.new_request.save()
-        requestslog_object = RequestsLog.objects.get(request_timestamp=\
+        requestslog_object = RequestsLog.objects.get(request_timestamp =\
                     self.new_request.request_timestamp)
         self.assertEqual(requestslog_object.requested_url,\
                     self.new_request.requested_url)
@@ -99,8 +100,7 @@ class RequestsLogModelTest(TestCase):
                     self.new_request.request_type)
 
     def test_delete_object(self):
-        self.new_request.save()
+        self.new_request.delete()
         requestslog_object = get_object_or_None(RequestsLog,
                     request_timestamp=self.new_request.request_timestamp)
-        
-            
+        self.assertTrue(requestslog_object is None)
