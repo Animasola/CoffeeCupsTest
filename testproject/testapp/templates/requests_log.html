@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block head %}<title>Request's Log</title>{% endblock %}
 {% block body %}
+<div class="controls">
+    <a href="{% url mainpage_url %}">Home</a>
+</div>
 <h3>First 10 request to this site</h3>
 
 <ul class="left_side_ul">
