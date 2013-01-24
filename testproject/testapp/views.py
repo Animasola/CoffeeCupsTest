@@ -15,5 +15,4 @@ def show_personal_info(request):
 def requests_log_page(request):
     first_ten_requests =\
         RequestsLog.objects.filter().order_by('request_timestamp')[: 10]
-    print first_ten_requests.count()
     return {'requests': first_ten_requests}
