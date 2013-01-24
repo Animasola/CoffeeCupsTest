@@ -103,3 +103,13 @@ class RequestsLogModelTest(TestCase):
         requestslog_object = get_object_or_None(
             RequestsLog, request_timestamp=self.new_request.request_timestamp)
         self.assertTrue(requestslog_object is None)
+
+
+class ContextProcessorTest(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_template_context(self):
+        response = self.client.get(reverse('mainpage_url'))
+        self.assertTrue('django_settings' in response.context)
