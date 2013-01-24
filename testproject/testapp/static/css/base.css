@@ -34,7 +34,51 @@ padding-left:10px;
 clear:both;
 }
 
+
+
+.form_left{
+float:left;
+}
+
+.form_right{
+float:left;
+padding-left:70px;
+}
+
+.fieldWrapper{
+padding:5px;
+}
+
+#idname, #idsurname, #idbirth_date, #idmy_photo{
+float:right;
+clear:both;
+padding-right:40px;
+}
+
+#idemail, #idjabber, #idskype, #idother_cont, #idbio{
+float:right;
+clear:both;
+}
+
+#idemail, #idjabber, #idskype{
+padding-right:60px;
+}
+
+#img_prev{
+float:left;
+max-width:480px;
+border: solid black 1px;
+}
+
 #my_photo_prev{
 max-width:480px;
 border: solid black 1px;
 }
+
+.login{
+float:right;
+padding-right:500px;
+clear:both;
+}
+
+
