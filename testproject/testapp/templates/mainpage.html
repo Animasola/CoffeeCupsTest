@@ -7,12 +7,9 @@
     <p>Name: {{ my_info.name }}</p>
 	<p>Last name: {{ my_info.last_name }}</p>
 	<p>Date of Birth: {{ my_info.birth_date }}</p>
-	<p>
-	  Bio:<br>
-	  <div class="multiline">
-	    {{ my_info.bio }}
-	  </div>
-	</p>
+        <p>Photo:<br>
+          <img id="my_photo_prev" src="{{ MEDIA_URL }}{{ my_info.photo }}">
+        </p>
   </div>
   <div class="right-side">
     <p>Contacts</p>
@@ -22,6 +19,12 @@
 	<p>Other contacts:<br>
 	  <div class="multiline">
 	    {{ my_info.other_contacts }}
+	  </div>
+	</p>
+	<p>
+	  Bio:<br>
+	  <div class="multiline">
+	    {{ my_info.bio }}
 	  </div>
 	</p>
   </div>

@@ -33,3 +33,8 @@ clear:both;
 padding-left:10px;
 clear:both;
 }
+
+#my_photo_prev{
+max-width:480px;
+border: solid black 1px;
+}
