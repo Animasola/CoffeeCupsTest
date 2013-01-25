@@ -24,7 +24,7 @@
       {{ form.photo.errors }}
     </div>
     <div class="clr"></div>
-    <div id="img_container"><img id="img_prev" src="{{MEDIA_URL}}{{ photo }}" alt="Image preview" /></div>	
+    <div id="img_container"><img id="img_prev" src="{% if photo %}{{MEDIA_URL}}{{ photo }}{% else %}http://placehold.it/380x500{% endif %}" alt="Image preview" /></div>	
   </div>
   <div class="form_right">
     <div class="fieldwrapper" id="idemail">

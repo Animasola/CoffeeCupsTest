@@ -12,7 +12,7 @@
 	<p>Last name: {{ my_info.last_name }}</p>
 	<p>Date of Birth: {{ my_info.birth_date }}</p>
         <p>Photo:<br>
-          <img id="my_photo_prev" src="{{ MEDIA_URL }}{{ my_info.photo }}">
+          <img id="my_photo_prev" src="{% if my_info.photo %}{{ MEDIA_URL }}{{ my_info.photo }}{% else %}http://placehold.it/380x500{% endif %}">
         </p>
   </div>
   <div class="right-side">

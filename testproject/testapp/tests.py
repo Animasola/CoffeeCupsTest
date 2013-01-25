@@ -4,9 +4,14 @@ from django.template import Context
 from django.test.client import Client
 from annoying.functions import get_object_or_None
 from django_any import any_model
-from datetime import date
+from StringIO import StringIO
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
+import sys
+from datetime import date, datetime
 
 from models import PersonalInfo, RequestsLog
+from forms import PersonalInfoForm
 
 
 class MainPageTest(TestCase):
@@ -113,3 +118,4 @@ class ContextProcessorTest(TestCase):
     def test_template_context(self):
         response = self.client.get(reverse('mainpage_url'))
         self.assertTrue('django_settings' in response.context)
+
