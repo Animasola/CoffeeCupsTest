@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 {% block head %}<title>Main page</title>{% endblock %}
+{% block heading %}
+<div class="login">
+  <p><a href="{% url editinfo %}">Login</a>
+</div>
+{% endblock %}
 {% block body %}
-
 <div class="my-data">
   <div class="left-side">
     <p>Name: {{ my_info.name }}</p>
 	<p>Last name: {{ my_info.last_name }}</p>
-	<p>Date of Birth: {{ my_info.birth_date }}</p>
-	<p>
-	  Bio:<br>
-	  <div class="multiline">
-	    {{ my_info.bio }}
-	  </div>
-	</p>
+	<p>Date of Birth: {{ my_info.birth_date|date:'F m, Y' }}</p>
+        <p>Photo:<br>
+          <img id="my_photo_prev" src="{% if my_info.photo %}{{ MEDIA_URL }}{{ my_info.photo }}{% else %}http://placehold.it/380x500{% endif %}">
+        </p>
   </div>
   <div class="right-side">
     <p>Contacts</p>
@@ -24,7 +25,12 @@
 	    {{ my_info.other_contacts }}
 	  </div>
 	</p>
+	<p>
+	  Bio:<br>
+	  <div class="multiline">
+	    {{ my_info.bio }}
+	  </div>
+	</p>
   </div>
 </div>
-
 {% endblock %}

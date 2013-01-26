@@ -4,9 +4,14 @@ from django.template import Context
 from django.test.client import Client
 from annoying.functions import get_object_or_None
 from django_any import any_model
-from datetime import date
+from StringIO import StringIO
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
+import sys
+from datetime import date, datetime
 
 from models import PersonalInfo, RequestsLog
+from forms import PersonalInfoForm
 
 
 class MainPageTest(TestCase):
@@ -113,3 +118,42 @@ class ContextProcessorTest(TestCase):
     def test_template_context(self):
         response = self.client.get(reverse('mainpage_url'))
         self.assertTrue('django_settings' in response.context)
+
+
+class FormValidationTest(TestCase):
+    fixtures = ['initial_date.json']
+
+    def setUp(self):
+        self.current_instance = get_object_or_None(PersonalInfo, pk=1)
+        self.file_obj = StringIO()
+        self.image = Image.new("RGBA", size=(40, 60), color=(256, 239, 114))
+        self.image.save(self.file_obj, 'png')
+        self.file_obj.name = 'test_%s.png' % datetime.now().microsecond
+        self.file_obj.seek(0)
+        self.form_data = any_model(PersonalInfo, photo="")
+
+    def test_form(self):
+        post_dict = {
+            'name': self.form_data.name,
+            'last_name': self.form_data.last_name,
+            'email': self.form_data.email,
+            'jabber': self.form_data.jabber,
+            'skype': self.form_data.skype,
+            'bio': self.form_data.bio[0],
+            'other_contacts': self.form_data.other_contacts[0],
+            'birth_date': self.form_data.birth_date }
+        file_dict = {
+            'photo': SimpleUploadedFile(
+                self.file_obj.name, self.file_obj.read())}
+        self.assertTrue(self.current_instance is not None)
+        form = PersonalInfoForm(
+            post_dict, file_dict, instance=self.current_instance)
+        self.assertTrue(form.is_valid())
+        form.save()
+        response = self.client.get(reverse('mainpage_url'))
+        for key, value in post_dict.iteritems():
+            if key == 'birth_date':
+                value = value.strftime('%B %m, %Y')
+                self.assertContains(response, value, status_code=200)
+            else:
+                self.assertContains(response, value, status_code=200)
