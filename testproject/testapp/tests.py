@@ -133,7 +133,6 @@ class FormValidationTest(TestCase):
         self.form_data = any_model(PersonalInfo, photo="")
 
     def test_form(self):
-        #dictionary with data for update form
         post_dict = {
             'name': self.form_data.name,
             'last_name': self.form_data.last_name,
@@ -143,7 +142,6 @@ class FormValidationTest(TestCase):
             'bio': self.form_data.bio[0],
             'other_contacts': self.form_data.other_contacts[0],
             'birth_date': self.form_data.birth_date }
-        #dictionary with new photo for update
         file_dict = {
             'photo': SimpleUploadedFile(
                 self.file_obj.name, self.file_obj.read())}

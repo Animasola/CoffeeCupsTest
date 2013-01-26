@@ -30,4 +30,5 @@ def edit_my_profile(request):
             form.save()
     else:
         form = PersonalInfoForm(instance=my_info)
-    return direct_to_template(request, 'profile_edit.html', {'form': form})
+    return direct_to_template(
+        request, 'profile_edit.html', {'form': form, 'photo': my_info.photo})
