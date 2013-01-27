@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
-from django.conf import settings as djset
+from django.conf import settings
 
 
 def django_settings(request):
-    return {'django_settings': djset}
+    return {'django_settings': settings}

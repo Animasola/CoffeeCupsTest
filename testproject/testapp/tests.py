@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.template import Context
 from django.test.client import Client
 from annoying.functions import get_object_or_None
@@ -113,3 +114,6 @@ class ContextProcessorTest(TestCase):
     def test_template_context(self):
         response = self.client.get(reverse('mainpage_url'))
         self.assertTrue('django_settings' in response.context)
+        django_settings = response.context['django_settings']
+        self.assertTrue(isinstance(django_settings, type(settings)))
+        self.assertEquals(django_settings.ROOT_URLCONF, 'testproject.urls')
