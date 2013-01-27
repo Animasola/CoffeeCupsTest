@@ -136,6 +136,17 @@ class FormValidationTest(TestCase):
         self.file_obj.seek(0)
         self.form_data = any_model(PersonalInfo, photo="")
 
+    def test_edit_profile_view(self):
+        response = self.client.get(reverse('editinfo'))
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(
+            response['Location'],
+            'http://testserver%s?next=%s' % (
+                reverse('login'), reverse('editinfo')))
+        user = self.client.login(username='admin', password='admin')
+        response = self.client.get(reverse('editinfo'))
+        self.assertEquals(response.status_code, 200)
+
     def test_form(self):
         post_dict = {
             'name': self.form_data.name,
@@ -145,7 +156,7 @@ class FormValidationTest(TestCase):
             'skype': self.form_data.skype,
             'bio': self.form_data.bio[0],
             'other_contacts': self.form_data.other_contacts[0],
-            'birth_date': self.form_data.birth_date }
+            'birth_date': self.form_data.birth_date}
         file_dict = {
             'photo': SimpleUploadedFile(
                 self.file_obj.name, self.file_obj.read())}

@@ -13,7 +13,6 @@ class PersonalInfoForm(ModelForm):
 
     class Media:
         js = (
-            "http://code.jquery.com/jquery-latest.js",
             '%sjs/photo_preview.js' % settings.STATIC_URL,)
 
     class Meta:
