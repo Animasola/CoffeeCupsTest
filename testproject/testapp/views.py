@@ -3,6 +3,8 @@ from annoying.decorators import render_to
 from django.views.generic.simple import direct_to_template
 from annoying.functions import get_object_or_None
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 
 from models import PersonalInfo, RequestsLog
 from forms import PersonalInfoForm
@@ -28,6 +30,7 @@ def edit_my_profile(request):
         form = PersonalInfoForm(request.POST, request.FILES, instance=my_info)
         if form.is_valid():
             form.save()
+            return redirect(reverse('mainpage_url'))
     else:
         form = PersonalInfoForm(instance=my_info)
     return direct_to_template(
