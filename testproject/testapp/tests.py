@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.template import Template
 from django.template import Context
 from django.test.client import Client
 from annoying.functions import get_object_or_None
@@ -188,3 +189,18 @@ class FormValidationTest(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         #with data
         self.assertNotContains(response, 'error')
+
+
+class TemplateTagTest(TestCase):
+
+    def setUp(self):
+        self.current_instance = get_object_or_None(PersonalInfo, pk=1)
+        self.client = Client()
+
+    def test_templatetag(self):
+        template = Template('{% load admin_edit_tag %}{% admin_url object %}')
+        context = Context({"object": self.current_instance})
+        url = u'/admin/testapp/personalinfo/1/'
+        self.failUnlessEqual(url, template.render(context))
+        response = self.client.get(template.render(context))
+        self.assertEquals(response.status_code, 200)
