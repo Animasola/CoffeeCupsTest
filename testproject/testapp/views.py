@@ -5,6 +5,8 @@ from annoying.functions import get_object_or_None
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
+from django.utils import simplejson
+from django.http import HttpResponse
 
 from models import PersonalInfo, RequestsLog
 from forms import PersonalInfoForm
@@ -28,9 +30,23 @@ def edit_my_profile(request):
     my_info = get_object_or_None(PersonalInfo, pk=1)
     if request.method == 'POST':
         form = PersonalInfoForm(request.POST, request.FILES, instance=my_info)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('mainpage_url'))
+        response_dict = {}
+        if request.is_ajax():
+            if form.is_valid():
+                form.save()
+                response_dict['result'] = 'success'
+            else:
+                response_dict['result'] = 'error'
+                errors = {}
+                for error in form.errors:
+                    errors[error] = form.errors[error][0]
+                response_dict['form_errors'] = errors
+            json = simplejson.dumps(response_dict, ensure_ascii=False)
+            return HttpResponse(json, mimetype='application/json')
+        else:
+            if form.is_valid():
+                form.save()
+                return redirect(reverse('mainpage_url'))
     else:
         form = PersonalInfoForm(instance=my_info)
     return direct_to_template(

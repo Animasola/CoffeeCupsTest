@@ -18,8 +18,9 @@ class PersonalInfoForm(ModelForm):
 
     class Media:
         js = (
-            "/static/js/jquery.form_3.09.js",
-            '%sjs/photo_preview.js' % settings.STATIC_URL,)
+            '%sjs/jquery.form_3.09.js' % settings.STATIC_URL,
+            '%sjs/photo_preview.js' % settings.STATIC_URL,
+            '%sjs/form_ajax_submit.js' % settings.STATIC_URL,)
 
     class Meta:
         model = PersonalInfo
