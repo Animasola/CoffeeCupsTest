@@ -135,6 +135,15 @@ class FormValidationTest(TestCase):
         self.file_obj.name = 'test_%s.png' % datetime.now().microsecond
         self.file_obj.seek(0)
         self.form_data = any_model(PersonalInfo, photo="")
+        self.post_dict = {
+            'name': self.form_data.name,
+            'last_name': self.form_data.last_name,
+            'email': self.form_data.email,
+            'jabber': self.form_data.jabber,
+            'skype': self.form_data.skype,
+            'bio': self.form_data.bio[0],
+            'other_contacts': self.form_data.other_contacts[0],
+            'birth_date': self.form_data.birth_date}
 
     def test_edit_profile_view(self):
         response = self.client.get(reverse('editinfo'))
@@ -148,27 +157,34 @@ class FormValidationTest(TestCase):
         self.assertEquals(response.status_code, 200)
 
     def test_form(self):
-        post_dict = {
-            'name': self.form_data.name,
-            'last_name': self.form_data.last_name,
-            'email': self.form_data.email,
-            'jabber': self.form_data.jabber,
-            'skype': self.form_data.skype,
-            'bio': self.form_data.bio[0],
-            'other_contacts': self.form_data.other_contacts[0],
-            'birth_date': self.form_data.birth_date}
         file_dict = {
             'photo': SimpleUploadedFile(
                 self.file_obj.name, self.file_obj.read())}
         self.assertTrue(self.current_instance is not None)
         form = PersonalInfoForm(
-            post_dict, file_dict, instance=self.current_instance)
+            self.post_dict, file_dict, instance=self.current_instance)
         self.assertTrue(form.is_valid())
         form.save()
         response = self.client.get(reverse('mainpage_url'))
-        for key, value in post_dict.iteritems():
+        for key, value in self.post_dict.iteritems():
             if key == 'birth_date':
                 value = value.strftime('%B %m, %Y')
                 self.assertContains(response, value, status_code=200)
             else:
                 self.assertContains(response, value, status_code=200)
+
+    def test_edit_profile_view_ajax(self):
+        user = self.client.login(username='admin', password='admin')
+        response = self.client.post(
+            reverse('editinfo'),
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertIn('application/json', response['Content-Type'])
+        #with no data
+        self.assertContains(response, 'error')
+        response = self.client.post(
+            reverse('editinfo'),
+            self.post_dict,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        #with data
+        self.assertNotContains(response, 'error')
