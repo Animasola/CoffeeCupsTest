@@ -13,7 +13,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from datetime import date, datetime
 
-from models import PersonalInfo, RequestsLog
+from models import PersonalInfo, RequestsLog, DbActionsLog
 from forms import PersonalInfoForm
 
 
@@ -233,3 +233,38 @@ class CommandTest(TestCase):
             self.assertTrue(out_line in out_list)
         self.assertEquals(len(get_models()), len(out_list))
         self.assertEquals(len(get_models()), len(err_list))
+
+
+class TestSignals(TestCase):
+
+    def setUp(self):
+        DbActionsLog.objects.filter().delete()
+        self.my_profile = any_model(PersonalInfo, photo="")
+
+    def test_creation(self):
+        log_record = DbActionsLog.objects.get(pk=1)
+        self.assertEquals(log_record.model_name, "PersonalInfo")
+        self.assertEquals(log_record.action, "Created")
+        self.assertEquals(
+            log_record.target_instance, "%s %s" % (
+                self.my_profile.name, self.my_profile.last_name))
+
+    def test_alter_delete(self):
+        me = get_object_or_None(PersonalInfo, pk=2)
+        self.assertTrue(me is not None)
+        me.name = "Andy"
+        me.save()
+        log_record = get_object_or_None(DbActionsLog, pk=2)
+        self.assertTrue(log_record is not None)
+        self.assertEquals(log_record.model_name, "PersonalInfo")
+        self.assertEquals(log_record.action, "Altered")
+        self.assertEquals(
+            log_record.target_instance, "%s %s" % (me.name, me.last_name))
+        me.delete()
+        log_record = get_object_or_None(DbActionsLog, pk=3)
+        self.assertTrue(log_record is not None)
+        self.assertEquals(log_record.model_name, "PersonalInfo")
+        self.assertEquals(log_record.action, "Deleted")
+        self.assertEquals(
+            log_record.target_instance, "%s %s" % (me.name, me.last_name))
+        self.assertTrue(DbActionsLog.objects.filter().count() == 3)
