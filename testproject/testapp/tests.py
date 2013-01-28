@@ -6,7 +6,9 @@ from django.template import Context
 from django.test.client import Client
 from annoying.functions import get_object_or_None
 from django_any import any_model
+from django.db.models import get_models
 from StringIO import StringIO
+from django.core.management import call_command
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from datetime import date, datetime
@@ -204,3 +206,30 @@ class TemplateTagTest(TestCase):
         self.failUnlessEqual(url, template.render(context))
         response = self.client.get(template.render(context))
         self.assertEquals(response.status_code, 200)
+
+
+class CommandTest(TestCase):
+
+    def setUp(self):
+        self.err = StringIO()
+        self.out = StringIO()
+
+    def test_command(self):
+        call_command("models_info", stderr=self.err, stdout=self.out)
+        self.err.seek(0)
+        self.out.seek(0)
+        err_list = self.err.read().splitlines()
+        out_list = self.out.read().splitlines()
+        for model in get_models():
+            #stderr must contains this line
+            err_line = "error: [%s] - %s objects" % (
+                model.__name__,
+                model._default_manager.count())
+            self.assertTrue(err_line in err_list)
+            #stdout must contains this line
+            out_line = "[%s] - %s objects" % (
+                model.__name__,
+                model._default_manager.count())
+            self.assertTrue(out_line in out_list)
+        self.assertEquals(len(get_models()), len(out_list))
+        self.assertEquals(len(get_models()), len(err_list))
