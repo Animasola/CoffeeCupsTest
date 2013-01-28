@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.db.models import get_models
 from django.conf import settings
 import logging
 import pprint

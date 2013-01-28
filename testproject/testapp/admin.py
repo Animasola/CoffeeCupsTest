@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import PersonalInfo, RequestsLog
+from models import PersonalInfo, RequestsLog, DbActionsLog
 
 
 class PersonalInfoAdmin(admin.ModelAdmin):
@@ -17,5 +17,12 @@ class RequestsLogAdmin(admin.ModelAdmin):
     date_hierarchy = 'request_timestamp'
 
 
+class DbActionsLogAdmin(admin.ModelAdmin):
+    list_display = ('model_name', 'target_instance', 'action', 'timestamp', )
+    list_filter = ('model_name', 'action',)
+    date_hierarchy = 'timestamp'
+    search_fields = ['model']
+
 admin.site.register(PersonalInfo, PersonalInfoAdmin)
 admin.site.register(RequestsLog, RequestsLogAdmin)
+admin.site.register(DbActionsLog, DbActionsLogAdmin)
