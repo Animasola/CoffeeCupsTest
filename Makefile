@@ -12,3 +12,6 @@ run:
 migrate:
 	PYTHONPATH=`pwd` DJANGO_SETTINGS_MODULE=testproject.settings $(MANAGE) migrate testapp
 
+models_info:
+	PYTHONPATH=`pwd` DJANGO_SETTINGS_MODULE=testproject.settings $(MANAGE) models_info
+
