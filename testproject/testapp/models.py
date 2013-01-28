@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.signals import post_save, post_delete
+from signals import models_change_log
+from datetime import time
 
 
 class PersonalInfo(models.Model):
@@ -42,3 +45,9 @@ class DbActionsLog(models.Model):
     def __unicode__(self):
         return "%s %s %s %s" % (
             self.model_name, self.target_instance, self.action, self.timestamp)
+
+
+post_save.connect(
+    models_change_log, dispatch_uid="%s%s" % (time.second, time.microsecond))
+post_delete.connect(
+    models_change_log, dispatch_uid="%s%s" % (time.second, time.microsecond))
