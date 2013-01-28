@@ -9,7 +9,6 @@ from django_any import any_model
 from StringIO import StringIO
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
-import sys
 from datetime import date, datetime
 
 from models import PersonalInfo, RequestsLog
@@ -153,7 +152,7 @@ class FormValidationTest(TestCase):
             response['Location'],
             'http://testserver%s?next=%s' % (
                 reverse('login'), reverse('editinfo')))
-        user = self.client.login(username='admin', password='admin')
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('editinfo'))
         self.assertEquals(response.status_code, 200)
 
@@ -175,7 +174,7 @@ class FormValidationTest(TestCase):
                 self.assertContains(response, value, status_code=200)
 
     def test_edit_profile_view_ajax(self):
-        user = self.client.login(username='admin', password='admin')
+        self.client.login(username='admin', password='admin')
         response = self.client.post(
             reverse('editinfo'),
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -198,7 +197,8 @@ class TemplateTagTest(TestCase):
         self.client = Client()
 
     def test_templatetag(self):
-        template = Template('{% load admin_edit_tag %}{% admin_url object %}')
+        template = Template(
+            '{% load admin_edit_tag %}{% get_in_admin object %}')
         context = Context({"object": self.current_instance})
         url = u'/admin/testapp/personalinfo/1/'
         self.failUnlessEqual(url, template.render(context))

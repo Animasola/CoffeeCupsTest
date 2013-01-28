@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.conf import settings
 from django.utils.safestring import mark_safe
 
 
@@ -8,9 +7,8 @@ class DatePickerWidget(forms.DateInput):
 
     class Media:
         css = {
-             'all': ("http://jquery-ui.googlecode.com/"
-                    "svn/tags/latest/themes/base/jquery-ui.css",)
-             }
+            'all': ("http://jquery-ui.googlecode.com/"
+            "svn/tags/latest/themes/base/jquery-ui.css",)}
         js = (
             "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js",
             "http://ajax.googleapis.com/ajax/"
