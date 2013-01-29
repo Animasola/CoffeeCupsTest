@@ -20,8 +20,16 @@ def show_personal_info(request):
 
 @render_to('requests_log.html')
 def requests_log_page(request):
-    first_ten_requests =\
-        RequestsLog.objects.filter().order_by('request_timestamp')[: 10]
+    try:
+        priority = request.GET['pr'].encode('utf-8')
+    except:
+        priority = None
+    if int(priority) == 0:
+        first_ten_requests = RequestsLog.objects.filter().order_by(
+            'priority')[: 10]
+    elif int(priority) == 1:
+        first_ten_requests = RequestsLog.objects.filter().order_by(
+            '-priority')[: 10]
     return {'requests': first_ten_requests}
 
 
