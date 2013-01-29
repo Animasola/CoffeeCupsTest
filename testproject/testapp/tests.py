@@ -223,12 +223,12 @@ class CommandTest(TestCase):
         for model in get_models():
             #stderr must contains this line
             err_line = "error: [%s] - %s objects" % (
-                model.__name__,
+                model.__name__.lower(),
                 model._default_manager.count())
             self.assertTrue(err_line in err_list)
             #stdout must contains this line
             out_line = "[%s] - %s objects" % (
-                model.__name__,
+                model.__name__.lower(),
                 model._default_manager.count())
             self.assertTrue(out_line in out_list)
         self.assertEquals(len(get_models()), len(out_list))
