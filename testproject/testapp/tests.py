@@ -242,9 +242,10 @@ class TestSignals(TestCase):
         self.my_profile = any_model(PersonalInfo, photo="")
 
     def test_creation(self):
-        log_record = DbActionsLog.objects.get(pk=1)
+        log_record = get_object_or_None(DbActionsLog, pk=1)
+        self.assertTrue(log_record is not None)
         self.assertEquals(log_record.model_name, "PersonalInfo")
-        self.assertEquals(log_record.action, "Created")
+        self.assertEquals(log_record.action, "cre")
         self.assertEquals(
             log_record.target_instance, "%s %s" % (
                 self.my_profile.name, self.my_profile.last_name))
@@ -257,14 +258,14 @@ class TestSignals(TestCase):
         log_record = get_object_or_None(DbActionsLog, pk=2)
         self.assertTrue(log_record is not None)
         self.assertEquals(log_record.model_name, "PersonalInfo")
-        self.assertEquals(log_record.action, "Altered")
+        self.assertEquals(log_record.action, "alt")
         self.assertEquals(
             log_record.target_instance, "%s %s" % (me.name, me.last_name))
         me.delete()
         log_record = get_object_or_None(DbActionsLog, pk=3)
         self.assertTrue(log_record is not None)
         self.assertEquals(log_record.model_name, "PersonalInfo")
-        self.assertEquals(log_record.action, "Deleted")
+        self.assertEquals(log_record.action, "del")
         self.assertEquals(
             log_record.target_instance, "%s %s" % (me.name, me.last_name))
         self.assertTrue(DbActionsLog.objects.filter().count() == 3)
