@@ -23,13 +23,13 @@ def requests_log_page(request):
     try:
         priority = request.GET['pr'].encode('utf-8')
     except:
-        priority = None
+        priority = '0'
     if int(priority) == 0:
         first_ten_requests = RequestsLog.objects.filter().order_by(
-            'priority')[: 10]
+            'priority', 'request_timestamp')[: 10]
     elif int(priority) == 1:
         first_ten_requests = RequestsLog.objects.filter().order_by(
-            '-priority')[: 10]
+            '-priority', 'request_timestamp')[: 10]
     return {'requests': first_ten_requests}
 
 
