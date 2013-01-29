@@ -31,8 +31,16 @@ class RequestsLog(models.Model):
 
 
 class DbActionsLog(models.Model):
+    DELETED = 'del'
+    ALTERED = 'alt'
+    CREATED = 'cre'
+    ACTION_CHOICES = (
+        (DELETED, 'Delete'),
+        (ALTERED, 'Alter'),
+        (CREATED, 'Create'),)
     model_name = models.CharField(max_length=30, verbose_name='Model name')
-    action = models.CharField(max_length=15, verbose_name='Commited action')
+    action = models.CharField(
+        max_length=15, verbose_name='Commited action', choices=ACTION_CHOICES)
     target_instance = models.CharField(
         max_length=255, blank=True, null=True, verbose_name='Target instance')
     timestamp = models.DateTimeField(
@@ -47,7 +55,5 @@ class DbActionsLog(models.Model):
             self.model_name, self.target_instance, self.action, self.timestamp)
 
 
-post_save.connect(
-    models_change_log, dispatch_uid="%s%s" % (time.second, time.microsecond))
-post_delete.connect(
-    models_change_log, dispatch_uid="%s%s" % (time.second, time.microsecond))
+post_save.connect(models_change_log, dispatch_uid='create_or_update_object')
+post_delete.connect(models_change_log, dispatch_uid='delete_object')
