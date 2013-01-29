@@ -1,14 +1,15 @@
 from django.core.management.base import NoArgsCommand
+from django.contrib.contenttypes.models import ContentType
 
 
 class Command(NoArgsCommand):
-    requires_model_validation = True
 
     def handle_noargs(self, **options):
-        lines = []
-        from django.db.models import get_models
-        for model in get_models():
-            lines.append("[%s] - %s objects" % (
-                model.__name__, model._default_manager.count() or "0"))
-        self.stderr.write("error: %s" % "\nerror: ".join(lines))
-        return "\n".join(lines)
+        content_types = ContentType.objects.all()
+        for ct_type in content_types:
+            if ct_type.model_class():
+                str_built = "[%s] - %s objects\n" % (
+                    ct_type.model,
+                    ct_type.model_class().objects.count())
+                self.stdout.write(str_built)
+                self.stderr.write("error: %s" % str_built)
