@@ -25,6 +25,7 @@ class RequestsLog(models.Model):
     request_ip = models.CharField(max_length=20)
     request_type = models.CharField(max_length=10)
     request_timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+    priority = models.PositiveSmallIntegerField(default=0)
 
     def __unicode__(self):
         return self.requested_url
