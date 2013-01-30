@@ -17,14 +17,14 @@ def models_change_log(sender, instance, signal, *args, **kwargs):
     if model == 'DbActionsLog':
         return
     targt_instance = instance
+    from models import DbActionsLog
     if 'created' in kwargs:
         if kwargs['created']:
-            action_ = "cre"
+            action_ = DbActionsLog.CREATED
         else:
-            action_ = "alt"
+            action_ = DbActionsLog.ALTERED
     else:
-        action_ = "del"
-    from models import DbActionsLog
+        action_ = DbActionsLog.DELETED
     log_record = DbActionsLog(
         model_name=model,
         target_instance=targt_instance,
