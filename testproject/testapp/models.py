@@ -40,7 +40,7 @@ class DbActionsLog(models.Model):
         (CREATED, 'Create'),)
     model_name = models.CharField(max_length=30, verbose_name='Model name')
     action = models.CharField(
-        max_length=15, verbose_name='Commited action', choices=ACTION_CHOICES)
+        max_length=3, verbose_name='Commited action', choices=ACTION_CHOICES)
     target_instance = models.CharField(
         max_length=255, blank=True, null=True, verbose_name='Target instance')
     timestamp = models.DateTimeField(
