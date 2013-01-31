@@ -20,17 +20,51 @@ def show_personal_info(request):
 
 @render_to('requests_log.html')
 def requests_log_page(request):
-    try:
-        priority = request.GET['pr'].encode('utf-8')
-    except:
-        priority = '0'
-    if int(priority) == 0:
+    priority = request.GET.get('pr', '0')
+    if str(priority).isdigit() and int(priority) == 0:
         first_ten_requests = RequestsLog.objects.filter().order_by(
             'priority', 'request_timestamp')[: 10]
-    elif int(priority) == 1:
+        toogle_sorting = 'desc'
+    elif str(priority).isdigit() and int(priority) == 1:
         first_ten_requests = RequestsLog.objects.filter().order_by(
             '-priority', 'request_timestamp')[: 10]
-    return {'requests': first_ten_requests}
+        toogle_sorting = 'asc'
+    else:
+        first_ten_requests = RequestsLog.objects.filter().order_by(
+            'request_timestamp')[: 10]
+        toogle_sorting = 'desc'
+    return {'requests': first_ten_requests, 'sorting': toogle_sorting}
+
+
+def requests_change_priority(request):
+    if request.method == 'POST' and request.is_ajax():
+        post_dict = {}
+        if 'increase' in request.POST and request.POST['increase']:
+            request_object = get_object_or_None(
+                RequestsLog, pk=request.POST['increase'].encode('utf-8'))
+            increased_priority = request_object.priority + 1
+            if increased_priority <= 2:
+                request_object.priority = increased_priority
+                request_object.save()
+                post_dict['result'] = 'success'
+                post_dict['new_value'] = increased_priority
+            else:
+                post_dict['result'] = 'error'
+                post_dict['err_text'] = 'Already maximum priority'
+        elif 'reduce' in request.POST and request.POST['reduce']:
+            request_object = get_object_or_None(
+                RequestsLog, pk=request.POST['reduce'].encode('utf-8'))
+            reduced_priority = request_object.priority - 1
+            if reduced_priority >= 0:
+                request_object.priority = reduced_priority
+                request_object.save()
+                post_dict['result'] = 'success'
+                post_dict['new_value'] = reduced_priority
+            else:
+                post_dict['resilt'] = 'error'
+                post_dict['err_text'] = 'Already minimum priority'
+        json = simplejson.dumps(post_dict, ensure_ascii=False)
+        return HttpResponse(json, mimetype='application/json')
 
 
 @login_required
