@@ -61,7 +61,7 @@ def requests_change_priority(request):
                 post_dict['result'] = 'success'
                 post_dict['new_value'] = reduced_priority
             else:
-                post_dict['resilt'] = 'error'
+                post_dict['result'] = 'error'
                 post_dict['err_text'] = 'Already minimum priority'
         json = simplejson.dumps(post_dict, ensure_ascii=False)
         return HttpResponse(json, mimetype='application/json')

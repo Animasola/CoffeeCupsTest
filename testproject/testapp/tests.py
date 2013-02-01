@@ -91,6 +91,32 @@ class RequestsLogTemplateTest(TestCase):
         self.assertContains(
             response, requestslog_object.request_ip, status_code=200)
 
+    def test_change_priority(self):
+        response = self.client.get(reverse('requests_url'))
+        self.assertContains(response, 'GET', count=1, status_code=200)
+        self.assertContains(response, 'id="request1">0', count=1, status_code=200)
+        response = self.client.get(reverse('requests_url'))
+        self.assertContains(response, 'GET', count=2, status_code=200)
+        self.assertNotContains(response, 'icon-minus', status_code=200)
+        self.assertNotContains(response, 'icon-plus', status_code=200)
+        self.client.login(username='admin', password='admin')
+        response = self.client.get(reverse('requests_url'))
+        self.assertContains(response, 'icon-plus', status_code=200)
+        self.assertContains(response, 'icon-minus', status_code=200)
+        self.client.post(
+            reverse('change_prio'),
+            {'increase':1},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.get(reverse('requests_url'))
+        self.assertContains(response, 'id="request1">1', count=1, status_code=200)
+        self.client.post(
+            reverse('change_prio'),
+            {'reduce':1},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.get(reverse('requests_url'))
+        self.assertContains(response, 'id="request1">0', count=1, status_code=200)
+        self.assertContains(response, 'GET', count=5, status_code=200)
+        self.assertContains(response, 'POST', count=3, status_code=200)
 
 class RequestsLogModelTest(TestCase):
 
