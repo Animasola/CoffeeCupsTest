@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from signals import models_change_log
-from datetime import time
 
 
 class PersonalInfo(models.Model):
