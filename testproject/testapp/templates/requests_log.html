@@ -1,13 +1,45 @@
 {% extends "base.html" %}
-{% block head %}<title>Request's Log</title>{% endblock %}
+{% block head %}
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+	<script type="text/javascript" src="/static/js/requests_priority.js"></script>
+  <script type="text/javascript">
+    var prior_change_url = '{% url change_prio %}';
+  </script>
+  <title>Request's Log</title>
+{% endblock %}
 {% block body %}
 
-<h3>First 10 request to this site <a href="{% url requests_url %}?pr=0">GET first</a> | <a href="{% url requests_url %}?pr=1">POST first</a></h3>
-
-<ul class="left_side_ul">
-{% for request in requests %}
-  <li class="log_instance"><b>{{ request.request_type }}</b> request to <a href="{{ request.requested_url }}">{{ request.requested_url }}</a> from <b>{{ request.request_ip }}</b> at {{ request.request_timestamp }}</li>
-{% endfor %}
-</ul>
+<div class="container-fluid">
+<h3>First 10 request to this site</h3>
+<div class="span10">
+<table class="table table-striped table-hover table-condensed">
+<thead>
+  <th>Type</th>
+  <th>Requested adress</th>
+  <th>IP</th>
+  <th>Priority
+    {% if sorting == 'asc' %}
+      <a href="{% url requests_url %}?pr=0" class="pull-right"><i class="icon-arrow-up" title="Click to chenge sorting"></i></a>
+    {% else %}
+      <a href="{% url requests_url %}?pr=1" class="pull-right"><i class="icon-arrow-down" title="Click to chenge sorting"></i></a></th>
+    {% endif %}
+</thead>
+  {% for request in requests %}
+    <tr>
+      <td><b>{{ request.request_type }}</b></td>
+      <td>request to <a href="{{ request.requested_url }}">{{ request.requested_url }}</a></td>
+      <td>from <b>{{ request.request_ip }}</b></td>
+      <td>{% if user.is_authenticated %}
+          <i class="icon-minus" onclick="reducePriority(this, {{ request.pk }}); return false;"></i>
+	  <span class="label label-info" id="request{{ request.pk }}">{{ request.priority }}</span>
+	  <i class="icon-plus" onclick="increasePriority(this, {{ request.pk }}); return false;"></i>
+	{% else %}
+	  <span class="label label-info" id="request{{ request.pk }}">{{ request.priority }}</span>
+	{% endif %}
+    <tr>
+  {% endfor %}
+</table>
+</div>
+</div>
 
 {% endblock %}
