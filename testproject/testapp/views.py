@@ -42,27 +42,30 @@ def requests_change_priority(request):
         if 'increase' in request.POST and request.POST['increase']:
             request_object = get_object_or_None(
                 RequestsLog, pk=request.POST['increase'].encode('utf-8'))
-            increased_priority = request_object.priority + 1
-            if increased_priority <= 2:
-                request_object.priority = increased_priority
-                request_object.save()
-                post_dict['result'] = 'success'
-                post_dict['new_value'] = increased_priority
-            else:
-                post_dict['result'] = 'error'
-                post_dict['err_text'] = 'Already maximum priority'
+            if request_object:
+                increased_priority = request_object.priority + 1
+                try:
+                    request_object.priority = increased_priority
+                    request_object.save()
+                    post_dict['result'] = 'success'
+                    post_dict['new_value'] = increased_priority
+                except:
+                    post_dict['result'] = 'error'
         elif 'reduce' in request.POST and request.POST['reduce']:
             request_object = get_object_or_None(
                 RequestsLog, pk=request.POST['reduce'].encode('utf-8'))
-            reduced_priority = request_object.priority - 1
-            if reduced_priority >= 0:
-                request_object.priority = reduced_priority
-                request_object.save()
-                post_dict['result'] = 'success'
-                post_dict['new_value'] = reduced_priority
-            else:
-                post_dict['result'] = 'error'
-                post_dict['err_text'] = 'Already minimum priority'
+            if request_object:
+                reduced_priority = request_object.priority - 1
+                if reduced_priority >=0:
+                    try:
+                        request_object.priority = reduced_priority
+                        request_object.save()
+                        post_dict['result'] = 'success'
+                        post_dict['new_value'] = reduced_priority
+                    except:
+                        post_dict['result'] = 'error'
+                else:
+                    post_dict['result'] = 'error'
         json = simplejson.dumps(post_dict, ensure_ascii=False)
         return HttpResponse(json, mimetype='application/json')
 
