@@ -94,7 +94,8 @@ class RequestsLogTemplateTest(TestCase):
     def test_change_priority(self):
         response = self.client.get(reverse('requests_url'))
         self.assertContains(response, 'GET', count=1, status_code=200)
-        self.assertContains(response, 'id="request1">0', count=1, status_code=200)
+        self.assertContains(
+            response, 'id="request1">0', count=1, status_code=200)
         response = self.client.get(reverse('requests_url'))
         self.assertContains(response, 'GET', count=2, status_code=200)
         self.assertNotContains(response, 'icon-minus', status_code=200)
@@ -105,18 +106,37 @@ class RequestsLogTemplateTest(TestCase):
         self.assertContains(response, 'icon-minus', status_code=200)
         self.client.post(
             reverse('change_prio'),
-            {'increase':1},
+            {'increase': 1},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         response = self.client.get(reverse('requests_url'))
-        self.assertContains(response, 'id="request1">1', count=1, status_code=200)
+        self.assertContains(
+            response, 'id="request1">1', count=1, status_code=200)
         self.client.post(
             reverse('change_prio'),
-            {'reduce':1},
+            {'reduce': 1},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         response = self.client.get(reverse('requests_url'))
-        self.assertContains(response, 'id="request1">0', count=1, status_code=200)
+        self.assertContains(
+            response, 'id="request1">0', count=1, status_code=200)
         self.assertContains(response, 'GET', count=5, status_code=200)
-        self.assertContains(response, 'POST', count=3, status_code=200)
+        self.assertContains(response, 'POST', count=2, status_code=200)
+
+    def test_requests_sorting(self):
+        for i in xrange(10):
+            self.client.get(reverse('mainpage_url'))
+        self.client.post(reverse('requests_url'))
+        #asc sorting
+        response = self.client.get(
+            '%s?pr=0' % reverse('requests_url'))
+        #sould contains 10 GET requests with priority 0
+        self.assertContains(response, 'GET', count=10, status_code=200)
+        #desc sorting
+        response = self.client.get(
+            '%s?pr=1' % reverse('requests_url'))
+        #response should contains 1 POST and 9 GET requests
+        self.assertContains(response, 'POST', count=1, status_code=200)
+        self.assertContains(response, 'GET', count=9, status_code=200)
+
 
 class RequestsLogModelTest(TestCase):
 
