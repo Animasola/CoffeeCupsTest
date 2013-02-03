@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
+    url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^', include('testproject.testapp.urls', namespace='testapp')),
 )
 

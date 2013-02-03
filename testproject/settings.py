@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.comments',
     'south',
     'testproject.testapp',
     'django.contrib.admin',
