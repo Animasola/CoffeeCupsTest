@@ -77,4 +77,16 @@ padding-right:500px;
 clear:both;
 }
 
+.contact-me{
+float:left;
+padding-left:50px;
+background-color:#FFFFE0;
+border: solid  #F0E68C 3px;
+margin:5px;
+}
+form p{
+float:right;
+clear:both;
+padding-right:10px;
+}
 

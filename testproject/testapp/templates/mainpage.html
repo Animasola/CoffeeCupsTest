@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block head %}<title>Main page</title>{% endblock %}
+{% block head %}<title>Main page</title>
+{% load comments %}
+{% endblock %}
 {% block heading %}
 {% load admin_edit_tag %}
 <div class="login">
@@ -38,4 +40,11 @@
 	</p>
   </div>
 </div>
+
+{% get_comment_form for my_info as my_form %}
+  <div class="contact-me">
+    <h4>Contact me</h4>
+    {% render_comment_form for my_info %}
+  </div>
+
 {% endblock %}
