@@ -108,7 +108,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
-    'testproject.utils.context_processors.django_settings',
+    'testproject.testapp.utils.context_processors.django_settings',
 )
 
 ROOT_URLCONF = 'testproject.urls'

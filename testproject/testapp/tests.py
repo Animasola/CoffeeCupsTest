@@ -3,7 +3,6 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import Template
 from django.template import Context
-from django.test.client import Client
 from annoying.functions import get_object_or_None
 from django_any import any_model
 from django.db.models import get_models
@@ -22,8 +21,7 @@ class MainPageTest(TestCase):
 
     def setUp(self):
         self.my_info = get_object_or_None(PersonalInfo, pk=1)
-        self.client = Client()
-        self.response = self.client.get(reverse('mainpage_url'))
+        self.response = self.client.get(reverse('testapp:mainpage_url'))
 
     def test_object_as_string(self):
         self.assertEqual(str(self.my_info), 'Andrew Gordiychuk')
@@ -65,23 +63,20 @@ class MainPageTest(TestCase):
 
 class RequestsLogTemplateTest(TestCase):
 
-    def setUp(self):
-        self.client = Client()
-
     def test_template(self):
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'requests_log.html')
 
     def test_requests_page(self):
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertContains(response, 'from', count=1, status_code=200)
         for n in xrange(15):
-            response = self.client.get(reverse('requests_url'))
+            response = self.client.get(reverse('testapp:requests_url'))
         self.assertContains(response, 'from', count=10, status_code=200)
 
     def test_template_context(self):
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertTrue('requests' in response.context)
         requestslog_object = RequestsLog.objects.get(pk=1)
         self.assertContains(
@@ -92,30 +87,30 @@ class RequestsLogTemplateTest(TestCase):
             response, requestslog_object.request_ip, status_code=200)
 
     def test_change_priority(self):
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertContains(response, 'GET', count=1, status_code=200)
         self.assertContains(
             response, 'id="request1">0', count=1, status_code=200)
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertContains(response, 'GET', count=2, status_code=200)
         self.assertNotContains(response, 'icon-minus', status_code=200)
         self.assertNotContains(response, 'icon-plus', status_code=200)
         self.client.login(username='admin', password='admin')
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertContains(response, 'icon-plus', status_code=200)
         self.assertContains(response, 'icon-minus', status_code=200)
         self.client.post(
-            reverse('change_prio'),
+            reverse('testapp:change_prio'),
             {'increase': 1},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertContains(
             response, 'id="request1">1', count=1, status_code=200)
         self.client.post(
-            reverse('change_prio'),
+            reverse('testapp:change_prio'),
             {'reduce': 1},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        response = self.client.get(reverse('requests_url'))
+        response = self.client.get(reverse('testapp:requests_url'))
         self.assertContains(
             response, 'id="request1">0', count=1, status_code=200)
         self.assertContains(response, 'GET', count=5, status_code=200)
@@ -123,16 +118,16 @@ class RequestsLogTemplateTest(TestCase):
 
     def test_requests_sorting(self):
         for i in xrange(10):
-            self.client.get(reverse('mainpage_url'))
-        self.client.post(reverse('requests_url'))
+            self.client.get(reverse('testapp:mainpage_url'))
+        self.client.post(reverse('testapp:requests_url'))
         #asc sorting
         response = self.client.get(
-            '%s?pr=0' % reverse('requests_url'))
+            '%s?pr=0' % reverse('testapp:requests_url'))
         #sould contains 10 GET requests with priority 0
         self.assertContains(response, 'GET', count=10, status_code=200)
         #desc sorting
         response = self.client.get(
-            '%s?pr=1' % reverse('requests_url'))
+            '%s?pr=1' % reverse('testapp:requests_url'))
         #response should contains 1 POST and 9 GET requests
         self.assertContains(response, 'POST', count=1, status_code=200)
         self.assertContains(response, 'GET', count=9, status_code=200)
@@ -161,11 +156,8 @@ class RequestsLogModelTest(TestCase):
 
 class ContextProcessorTest(TestCase):
 
-    def setUp(self):
-        self.client = Client()
-
     def test_template_context(self):
-        response = self.client.get(reverse('mainpage_url'))
+        response = self.client.get(reverse('testapp:mainpage_url'))
         self.assertTrue('django_settings' in response.context)
         django_settings = response.context['django_settings']
         self.assertTrue(isinstance(django_settings, type(settings)))
@@ -194,14 +186,14 @@ class FormValidationTest(TestCase):
             'birth_date': self.form_data.birth_date}
 
     def test_edit_profile_view(self):
-        response = self.client.get(reverse('editinfo'))
+        response = self.client.get(reverse('testapp:editinfo'))
         self.assertEquals(response.status_code, 302)
         self.assertEquals(
             response['Location'],
             'http://testserver%s?next=%s' % (
-                reverse('login'), reverse('editinfo')))
+                reverse('login'), reverse('testapp:editinfo')))
         self.client.login(username='admin', password='admin')
-        response = self.client.get(reverse('editinfo'))
+        response = self.client.get(reverse('testapp:editinfo'))
         self.assertEquals(response.status_code, 200)
 
     def test_form(self):
@@ -213,7 +205,7 @@ class FormValidationTest(TestCase):
             self.post_dict, file_dict, instance=self.current_instance)
         self.assertTrue(form.is_valid())
         form.save()
-        response = self.client.get(reverse('mainpage_url'))
+        response = self.client.get(reverse('testapp:mainpage_url'))
         for key, value in self.post_dict.iteritems():
             if key == 'birth_date':
                 value = value.strftime('%B %m, %Y')
@@ -224,14 +216,14 @@ class FormValidationTest(TestCase):
     def test_edit_profile_view_ajax(self):
         self.client.login(username='admin', password='admin')
         response = self.client.post(
-            reverse('editinfo'),
+            reverse('testapp:editinfo'),
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertIn('application/json', response['Content-Type'])
         #with no data
         self.assertContains(response, 'error')
         response = self.client.post(
-            reverse('editinfo'),
+            reverse('testapp:editinfo'),
             self.post_dict,
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         #with data
@@ -242,7 +234,6 @@ class TemplateTagTest(TestCase):
 
     def setUp(self):
         self.current_instance = get_object_or_None(PersonalInfo, pk=1)
-        self.client = Client()
 
     def test_templatetag(self):
         template = Template(

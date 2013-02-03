@@ -24,7 +24,7 @@ $.ajaxSetup({
 function reducePriority(obj, id) {
 	$.ajax({
 		type:		"POST",
-		url:		prior_change_url + "?reduce=" + id,
+		url:		prior_change_url,
 		data:		{
 			"reduce": id
 		},
@@ -45,7 +45,7 @@ function reducePriority(obj, id) {
 function increasePriority(obj, id) {
 	$.ajax({
 		type:		"POST",
-		url:		prior_change_url + "?increase=" + id,
+		url:		prior_change_url,
 		data:		{
 			"increase": id
 		},

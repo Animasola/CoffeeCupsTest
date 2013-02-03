@@ -11,10 +11,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
-    url(r'^$', show_personal_info, name='mainpage_url'),
-    url(r'^requests/$', requests_log_page, name='requests_url'),
-    url(r'^requests/priority/$', requests_change_priority, name='change_prio'),
-    url(r'editinfo/', edit_my_profile, name='editinfo'),
+    url(r'^', include('testproject.testapp.urls', namespace='testapp')),
 )
 
 if settings.DEBUG:

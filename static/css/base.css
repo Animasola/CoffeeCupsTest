@@ -42,7 +42,6 @@ float:left;
 
 .form_right{
 float:left;
-padding-left:70px;
 }
 
 .fieldWrapper{
@@ -60,9 +59,6 @@ float:right;
 clear:both;
 }
 
-#idemail, #idjabber, #idskype{
-padding-right:60px;
-}
 
 #img_prev{
 float:left;

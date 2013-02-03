@@ -23,7 +23,7 @@
       {% if next %}
         <input type="hidden" name="next" value="{{ next }}" />
       {% else %}
-        <input type="hidden" name="next" value="{% url mainpage_url %}" />
+        <input type="hidden" name="next" value="{% url testapp:mainpage_url %}" />
       {% endif %}
       <input type="submit" value="login" />
     </form>
