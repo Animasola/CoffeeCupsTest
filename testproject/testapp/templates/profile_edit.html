@@ -4,7 +4,7 @@
 {% block body %}
 <h3>Edit my profile</h3>
 
-<form id="editmyinfo" enctype="multipart/form-data" action="{% url editinfo %}" method="POST">
+<form id="editmyinfo" enctype="multipart/form-data" action="{% url testapp:editinfo %}" method="POST">
   {% csrf_token %}
   <div class="form_left">
     <div class="fieldWrapper" id="idname">
@@ -51,6 +51,6 @@
   </div>
   <div class="clr"></div>
     <div id="error_message">Fill the form and press Submit button</div>
-    <p id="form_butts"><button id="savebutton" type="submit">Submit</button> <a href="{% url mainpage_url %}">cancel</a></p>
+    <p id="form_butts"><button id="savebutton" type="submit">Submit</button> <a href="{% url testapp:mainpage_url %}">cancel</a></p>
 </form>
 {% endblock %}

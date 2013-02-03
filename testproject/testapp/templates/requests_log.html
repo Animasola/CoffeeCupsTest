@@ -3,7 +3,7 @@
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
 	<script type="text/javascript" src="/static/js/requests_priority.js"></script>
   <script type="text/javascript">
-    var prior_change_url = '{% url change_prio %}';
+    var prior_change_url = '{% url testapp:change_prio %}';
   </script>
   <title>Request's Log</title>
 {% endblock %}
@@ -19,9 +19,9 @@
   <th>IP</th>
   <th>Priority
     {% if sorting == 'asc' %}
-      <a href="{% url requests_url %}?pr=0" class="pull-right"><i class="icon-arrow-up" title="Click to chenge sorting"></i></a>
+      <a href="{% url testapp:requests_url %}?pr=0" class="pull-right"><i class="icon-arrow-up" title="Click to chenge sorting"></i></a>
     {% else %}
-      <a href="{% url requests_url %}?pr=1" class="pull-right"><i class="icon-arrow-down" title="Click to chenge sorting"></i></a></th>
+      <a href="{% url testapp:requests_url %}?pr=1" class="pull-right"><i class="icon-arrow-down" title="Click to chenge sorting"></i></a></th>
     {% endif %}
 </thead>
   {% for request in requests %}

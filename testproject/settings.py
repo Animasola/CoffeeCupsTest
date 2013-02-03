@@ -11,6 +11,14 @@ MANAGERS = ADMINS
 
 DEPLOY_DIR = os.path.dirname(os.path.realpath(__file__))
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'andrew.rovno@gmail.com'
+EMAIL_HOST_PASSWORD = 'Btp31uQE#'
+
+AKISMET_API_KEY = '342d2251a707'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -108,7 +116,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
-    'testproject.utils.context_processors.django_settings',
+    'testproject.testapp.utils.context_processors.django_settings',
 )
 
 ROOT_URLCONF = 'testproject.urls'
@@ -134,6 +142,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.comments',
     'south',
     'testproject.testapp',
     'django.contrib.admin',

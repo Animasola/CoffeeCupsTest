@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from django.http import HttpResponse
+from django.http import Http404
 
 from models import PersonalInfo, RequestsLog
 from forms import PersonalInfoForm
@@ -68,6 +69,8 @@ def requests_change_priority(request):
                     post_dict['result'] = 'error'
         json = simplejson.dumps(post_dict, ensure_ascii=False)
         return HttpResponse(json, mimetype='application/json')
+    else:
+        raise Http404
 
 
 @login_required

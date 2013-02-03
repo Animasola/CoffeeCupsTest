@@ -12,13 +12,13 @@
   {% block heading %}{% endblock %}
   <h1 class="page-header">42 Coffee Cups Test Assignment</h1>
   <div class="controls">
-    <a href="{% url mainpage_url %}">Home</a>
+    <a href="{% url testapp:mainpage_url %}">Home</a>
 </div>
   {% block body %}{% endblock %}
     <div class="clr"></div>
     <div id="reqlog">	
     <hr/>
-        <a href="{% url requests_url %}">requests</a>
+        <a href="{% url testapp:requests_url %}">requests</a>
     </div>
   </body>
 </html>

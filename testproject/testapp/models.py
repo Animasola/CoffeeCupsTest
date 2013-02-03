@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
-from signals import models_change_log
+from signals import models_change_log, moderate_comment
+from django.contrib.comments.signals import comment_was_posted
 
 
 class PersonalInfo(models.Model):
@@ -55,5 +56,6 @@ class DbActionsLog(models.Model):
             self.model_name, self.target_instance, self.action, self.timestamp)
 
 
+comment_was_posted.connect(moderate_comment)
 post_save.connect(models_change_log, dispatch_uid='create_or_update_object')
 post_delete.connect(models_change_log, dispatch_uid='delete_object')
